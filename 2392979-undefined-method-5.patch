@@ -1,0 +1,40 @@
+diff --git a/core/lib/Drupal/Core/StreamWrapper/TemporaryStream.php b/core/lib/Drupal/Core/StreamWrapper/TemporaryStream.php
+index 2f78060..837a678 100644
+--- a/core/lib/Drupal/Core/StreamWrapper/TemporaryStream.php
++++ b/core/lib/Drupal/Core/StreamWrapper/TemporaryStream.php
+@@ -7,6 +7,8 @@
+ 
+ namespace Drupal\Core\StreamWrapper;
+ 
++use Drupal\Core\Routing\UrlGeneratorTrait;
++
+ /**
+  * Defines a Drupal temporary (temporary://) stream wrapper class.
+  *
+@@ -15,6 +17,8 @@
+  */
+ class TemporaryStream extends LocalStream {
+ 
++  use UrlGeneratorTrait;
++
+   /**
+    * {@inheritdoc}
+    */
+diff --git a/core/modules/system/src/Tests/File/StreamWrapperTest.php b/core/modules/system/src/Tests/File/StreamWrapperTest.php
+index e678f90..5e0ecc8 100644
+--- a/core/modules/system/src/Tests/File/StreamWrapperTest.php
++++ b/core/modules/system/src/Tests/File/StreamWrapperTest.php
+@@ -96,4 +96,13 @@ function testGetValidStreamScheme() {
+     $this->assertTrue(file_stream_wrapper_valid_scheme(file_uri_scheme('public://asdf')), 'Got a valid stream scheme from public://asdf');
+     $this->assertFalse(file_stream_wrapper_valid_scheme(file_uri_scheme('foo://asdf')), 'Did not get a valid stream scheme from foo://asdf');
+   }
++
++  /**
++   * Test getExternalUrl() function.
++   */
++  function testGetExternalUrl() {
++    $this->installSchema('system', array('router'));
++    $this->container->get('router.builder')->rebuild();
++    $this->assertIdentical('http://localhost/system/temporary', file_stream_wrapper_get_instance_by_scheme('temporary')->getExternalUrl());
++  }
+ }

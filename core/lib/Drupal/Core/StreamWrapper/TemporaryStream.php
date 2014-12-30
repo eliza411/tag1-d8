@@ -7,6 +7,8 @@
 
 namespace Drupal\Core\StreamWrapper;
 
+use Drupal\Core\Routing\UrlGeneratorTrait;
+
 /**
  * Defines a Drupal temporary (temporary://) stream wrapper class.
  *
@@ -14,6 +16,8 @@ namespace Drupal\Core\StreamWrapper;
  * file interface.
  */
 class TemporaryStream extends LocalStream {
+
+  use UrlGeneratorTrait;
 
   /**
    * {@inheritdoc}
